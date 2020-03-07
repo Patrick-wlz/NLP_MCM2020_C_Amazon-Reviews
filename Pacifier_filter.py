@@ -12,8 +12,8 @@ title_col = sheet1.col_values(5)
 candidates = ['pacifier', 'dummy', 'binky', 'soother', 'teether', 'dodie']
 j = 0
 for i in range(0, len(title_col)):
-    title_col[i].replace(',', '')
-    title_col[i].replace('.', '')
+    title_col[i] = title_col[i].replace(',', ' ')
+    title_col[i] = title_col[i].replace('.', ' ')
     words = title_col[i].split(' ')
     for word in words:
         if word.lower() in candidates:
@@ -25,3 +25,4 @@ for i in range(0, len(title_col)):
         print(i)
 
 f.save('D:\\MCM2020\\pacifier_filtered.xls')
+
