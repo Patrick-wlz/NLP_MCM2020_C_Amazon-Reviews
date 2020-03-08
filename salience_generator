@@ -1,0 +1,50 @@
+import xlrd
+import xlwt
+import requests as rq
+import json
+
+base = "https://language.googleapis.com"
+
+API_KEY = "AIzaSyD1a-i58GIADLAeilAEkE22Lm0I8i9QWJ8"
+text = ""
+entities_endpoint = "/v1/documents:analyzeEntities"
+
+type_ = ["Pacifier", "Hair", "Micro"]
+n_ = 0
+data_path = "D:\MCM2020\\" + type_[n_] + "_Review.xlsx"
+
+f = xlwt.Workbook()
+wb = xlrd.open_workbook(filename=data_path)
+sheet1 = wb.sheet_by_index(0)
+sheet2 = f.add_sheet('page1', cell_overwrite_ok=True)
+col_r = sheet1.col_values(0)
+col_r2 = sheet1.col_values(1)
+
+dict_ = {}
+
+for i in range(1, 100):  ##
+    text = str(col_r[i]) + ". " + str(col_r2[i])
+
+    doc = {"type": "PLAIN_TEXT", "content": text}
+    request_data = {"document": doc, "encodingType": "UTF8"}
+
+    entities_url = base + entities_endpoint + "?key=" + API_KEY
+    response = rq.post(entities_url, data=json.dumps(request_data)).json()
+    for entity in response['entities']:
+        name = entity['name']
+        salience = entity['salience']
+        if name in dict_:
+            dict_[name][1] = ((dict_[name][0] * dict_[name][1]) + salience)/((dict_[name][0] + 1))
+            dict_[name][0] += 1
+        else:
+            dict_[name] = [1.0, salience]
+    print(i)
+
+j = 1
+for key, value in dict_.items():
+    sheet2.write(j, 0, str(key))
+    sheet2.write(j, 1, str(value[0]))
+    sheet2.write(j, 2, str(value[1]))
+    j += 1
+
+f.save('D:\\MCM2020\\Salience_' + type_[n_] + '.xls')
