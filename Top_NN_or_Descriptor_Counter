@@ -28,16 +28,16 @@ pat_ve = re.compile("(?<=[a-zA-Z])\'ve")
 lmtzr = WordNetLemmatizer()
 
 
-def get_words(file):  
-    with open (file) as f:  
+def get_words(file):
+    with open (file) as f:
         words_box=[]
         pat = re.compile(r'[^a-zA-Z \']+')
-        for line in f:                           
-            #if re.match(r'[a-zA-Z]*',line): 
+        for line in f:
+            #if re.match(r'[a-zA-Z]*',line):
             #    words_box.extend(line.strip().strip('\'\"\.,').lower().split())
             # words_box.extend(pat.sub(' ', line).strip().lower().split())
             words_box.extend(merge(replace_abbreviations(line).split()))
-    return collections.Counter(words_box)  
+    return collections.Counter(words_box)
 
 
 def merge(words):
@@ -83,12 +83,30 @@ def replace_abbreviations(text):
     return new_text
 
 
-def append_ext(words):
+def append_ext_NN(words, times = 100):
     new_words = []
+    i = 0
     for item in words:
         word, count = item
         tag = nltk.pos_tag(word_tokenize(word))[0][1] # tag is like [('bigger', 'JJR')]
-        new_words.append((word, count, tag))
+        if tag == 'NN':
+            new_words.append((word, count, tag))
+            i = i + 1;
+            if i > times:
+                break
+    return new_words
+
+def append_ext_Descriptor(words, times = 100):
+    new_words = []
+    i = 0
+    for item in words:
+        word, count = item
+        tag = nltk.pos_tag(word_tokenize(word))[0][1] # tag is like [('bigger', 'JJR')]
+        if tag == 'RB' or tag == 'JJ':
+            new_words.append((word, count, tag))
+            i = i + 1;
+            if i > times:
+                break
     return new_words
 
 def write_to_file(words, file='results.txt'):
@@ -100,8 +118,9 @@ def write_to_file(words, file='results.txt'):
 
 
 if __name__=='__main__':
-    book = sys.argv[1]
+    book = 'input.txt'
     print "counting..."
     words = get_words(book)
     print "writing file..."
-    write_to_file(append_ext(words.most_common()))
+    write_to_file(append_ext_NN(words.most_common()), "Hair_NN.txt")
+    write_to_file(append_ext_Descriptor(words.most_common()), "Hair_Descriptors.txt")
