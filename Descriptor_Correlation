@@ -1,0 +1,52 @@
+import xlrd
+import xlwt
+from word import *
+
+
+def sign(a):
+    if a > 0:
+        return 1
+    if a < 0:
+        return -1
+    else:
+        return 0
+
+
+type_ = "Sync"
+data_path = "D:\MCM2020\\" + type_ + "_Review.xlsx"
+
+f = xlwt.Workbook()
+wb = xlrd.open_workbook(filename=data_path)
+sheet1 = wb.sheet_by_index(0)
+sheet2 = f.add_sheet('page1', cell_overwrite_ok=True)
+col_r = sheet1.col_values(0)
+col_r2 = sheet1.col_values(1)
+col_r3 = sheet1.col_values(2)
+dict_ = {}
+
+for i in range(1, 1001):  ##
+    text = str(col_r[i]) + ". " + str(col_r2[i])
+    score = sign(col_r3[i] - 3)
+
+    words = get_words_(text)
+    adj = append_jj(words.most_common())
+
+    for word in adj:
+        if word[0] in dict_:
+            dict_[word[0]][1] = (dict_[word[0]][1] * dict_[word[0]][0] + word[1] * score) / (
+                        dict_[word[0]][0] + word[1])
+            dict_[word[0]][0] += word[1]
+        else:
+            dict_[word[0]] = [word[1], score]
+    # prepare to connect to the dict
+    if not i % 10:
+        print(i)
+
+j = 1
+for key, value in dict_.items():
+    sheet2.write(j, 0, str(key))
+    sheet2.write(j, 1, str(value[0]))
+    sheet2.write(j, 2, str(value[1]))
+    j += 1
+
+f.save('D:\\MCM2020\\New' + type_ + '_Descriptor.xls')
