@@ -5,7 +5,7 @@ import json
 
 base = "https://language.googleapis.com"
 
-API_KEY = "AIzaSyD1a-i58GIADLAeilAEkE22Lm0I8i9QWJ8"
+API_KEY = "YourKey"
 text = ""
 entities_endpoint = "/v1/documents:analyzeEntities"
 
