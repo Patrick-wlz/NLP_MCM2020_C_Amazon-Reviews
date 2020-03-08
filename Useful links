@@ -1,2 +1,25 @@
 https://data-science-blog.com/en/blog/2018/11/04/sentiment-analysis-using-python/
 https://github.com/shayanzare007/EntitySentiment
+
+
+sentiment scoring training:
+explaining:
+https://towardsdatascience.com/sentiment-analysis-with-deep-learning-62d4d0166ef6
+code:
+https://github.com/artem-oppermann/Sentiment-Analysis-of-Netflix-Reviews
+reports:
+https://cs224d.stanford.edu/reports/FengLin.pdf
+https://cs224d.stanford.edu/reports/HongJames.pdf
+https://cs224d.stanford.edu/reports/WangBo.pdf
+https://cs224d.stanford.edu/reports/WuJi.pdf
+
+
+手动标记：
+
+
+1-5星分类  api -> entity sentiment:
+ descriptor 词频？
+ 
+ 
+ 5题 descriptor 关联 
+ entity-level  训练  google api
